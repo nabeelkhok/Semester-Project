@@ -1,31 +1,35 @@
 import React from 'react';
 
 function AboutTeam() {
-    return (
-        <section className="bg-gray-100 py-10">
-            <div className="container mx-auto text-center">
-                <h2 className="text-2xl font-semibold">Meet Our Team</h2>
-                <p className="mt-4 text-gray-700">Our experienced team ensures seamless delivery and exceptional customer service.</p>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
-                    <div className="bg-white p-6 shadow-md rounded-lg">
-                        <img src="../../assets/75e7ceed-f664-49e0-bb72-5d34fe61e4ef.jpg" alt="CEO" className="w-24 h-24 mx-auto rounded-full" />
-                        <h3 className="mt-4 text-xl font-bold">John Doe</h3>
-                        <p className="text-gray-600">CEO & Founder</p>
-                    </div>
-                    <div className="bg-white p-6 shadow-md rounded-lg">
-                        <img src="../../assets/75e7ceed-f664-49e0-bb72-5d34fe61e4ef.jpg" alt="Operations Manager" className="w-24 h-24 mx-auto rounded-full" />
-                        <h3 className="mt-4 text-xl font-bold">Jane Smith</h3>
-                        <p className="text-gray-600">Operations Manager</p>
-                    </div>
-                    <div className="bg-white p-6 shadow-md rounded-lg">
-                        <img src="../../assets/75e7ceed-f664-49e0-bb72-5d34fe61e4ef.jpg" alt="Customer Support Head" className="w-24 h-24 mx-auto rounded-full" />
-                        <h3 className="mt-4 text-xl font-bold">Michael Brown</h3>
-                        <p className="text-gray-600">Head of Customer Support</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-    );
+  return (
+    <section className="w-full py-16">
+      <div className="container mx-auto px-4">
+        <h2 className="text-3xl font-bold text-center mb-8">Meet Our Team</h2>
+        <p className="text-xl text-gray-600 text-center mb-12 max-w-2xl mx-auto">
+          Our experienced team ensures seamless delivery and exceptional customer service.
+        </p>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="bg-white p-6 rounded-lg shadow-md text-center">
+            <h3 className="text-xl font-bold mb-2">John Doe</h3>
+            <p className="text-red-600">CEO & Founder</p>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow-md text-center">
+            <h3 className="text-xl font-bold mb-2">Jane Smith</h3>
+            <p className="text-red-600">Operations Manager</p>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow-md text-center">
+            <h3 className="text-xl font-bold mb-2">Joensito</h3>
+            <p className="text-red-600">Manager</p>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow-md text-center">
+            <h3 className="text-xl font-bold mb-2">Michael Brown</h3>
+            <p className="text-red-600">Head of Customer Support</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 }
 
 export default AboutTeam;
