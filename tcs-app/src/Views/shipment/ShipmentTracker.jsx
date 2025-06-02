@@ -14,9 +14,13 @@ const ShipmentTracker = ({
   const [statusUpdate, setStatusUpdate] = useState('');
   const [filter, setFilter] = useState('All');
   const [currentShipment, setCurrentShipment] = useState(null);
+  const [filteredShipments, setFilteredShipments] = useState([]);
+
+  const normalizeTrackingID = (id) => id.trim().toLowerCase();
 
   const handleTrack = () => {
-    const shipment = shipments.find(s => s.trackingID === trackingID.trim());
+    const normalizedInput = normalizeTrackingID(trackingID);
+    const shipment = shipments.find(s => normalizeTrackingID(s.trackingID) === normalizedInput);
     if (shipment) {
       setCurrentShipment(shipment);
     } else {
@@ -26,20 +30,38 @@ const ShipmentTracker = ({
   };
 
   const handleUpdateStatus = () => {
+    const normalizedInput = normalizeTrackingID(trackingID);
+    if (!normalizedInput) {
+      alert("Please enter a Tracking ID");
+      return;
+    }
+    if (!statusUpdate) {
+      alert("Please select a status to update");
+      return;
+    }
+
+    const shipmentExists = shipments.some(s => normalizeTrackingID(s.trackingID) === normalizedInput);
+    if (!shipmentExists) {
+      alert("Tracking ID not found, cannot update status.");
+      return;
+    }
+
     setShipments(prev =>
       prev.map(s =>
-        s.trackingID === trackingID
+        normalizeTrackingID(s.trackingID) === normalizedInput
           ? { ...s, status: statusUpdate, lastUpdated: new Date().toISOString().split('T')[0] }
           : s
       )
     );
     alert("Status Updated Successfully!");
+    setStatusUpdate('');
+    setTrackingID('');
+    setCurrentShipment(null);
   };
 
   const handleFilter = () => {
     const filtered = shipments.filter(s => filter === 'All' || s.status === filter);
-    alert(`Found ${filtered.length} shipments with status: ${filter}`);
-    console.log(filtered);
+    setFilteredShipments(filtered);
   };
 
   return (
@@ -62,7 +84,11 @@ const ShipmentTracker = ({
             placeholder="Enter Tracking ID"
             className="w-full p-2 border rounded mb-4"
           />
-          <button onClick={handleTrack} className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition">
+          <button
+            onClick={handleTrack}
+            className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition"
+            disabled={!trackingID.trim()}
+          >
             Track Order
           </button>
         </CardLayout>
@@ -82,13 +108,21 @@ const ShipmentTracker = ({
       <SectionContainer>
         <CardLayout>
           <h2 className="text-xl font-bold mb-2">Update Shipment Status</h2>
-          <select value={statusUpdate} onChange={e => setStatusUpdate(e.target.value)} className="border p-2 w-full mb-2">
+          <select
+            value={statusUpdate}
+            onChange={e => setStatusUpdate(e.target.value)}
+            className="border p-2 w-full mb-2"
+          >
             <option value="">Select New Status</option>
             <option value="Pending">Pending</option>
             <option value="In Transit">In Transit</option>
             <option value="Delivered">Delivered</option>
           </select>
-          <button onClick={handleUpdateStatus} className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition">
+          <button
+            onClick={handleUpdateStatus}
+            className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition"
+            disabled={!statusUpdate || !trackingID.trim()}
+          >
             Update
           </button>
         </CardLayout>
@@ -98,15 +132,35 @@ const ShipmentTracker = ({
       <SectionContainer>
         <CardLayout>
           <h2 className="text-xl font-bold mb-2">Filter Shipments</h2>
-          <select value={filter} onChange={e => setFilter(e.target.value)} className="border p-2 w-full mb-2">
+          <select
+            value={filter}
+            onChange={e => setFilter(e.target.value)}
+            className="border p-2 w-full mb-2"
+          >
             <option value="All">All</option>
             <option value="Pending">Pending</option>
             <option value="In Transit">In Transit</option>
             <option value="Delivered">Delivered</option>
           </select>
-          <button onClick={handleFilter} className="w-full bg-purple-500 text-white py-2 rounded hover:bg-purple-600 transition">
+          <button
+            onClick={handleFilter}
+            className="w-full bg-purple-500 text-white py-2 rounded hover:bg-purple-600 transition"
+          >
             Filter
           </button>
+
+          {filteredShipments.length > 0 ? (
+            <div className="mt-4 w-full max-w-3xl mx-auto">
+              <h3 className="text-lg font-semibold mb-2">Filtered Shipments:</h3>
+              {filteredShipments.map(s => (
+                <ShipmentCard key={s.trackingID} {...s} />
+              ))}
+            </div>
+          ) : (
+            filter !== 'All' && (
+              <p className="mt-4 text-center text-gray-600">No shipments found for status "{filter}"</p>
+            )
+          )}
         </CardLayout>
       </SectionContainer>
     </div>
